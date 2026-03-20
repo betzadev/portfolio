@@ -45,7 +45,7 @@ export const ProjectsSection = () => {
   const others = translations[language].projects.others;
 
   return (
-    <section id="work" style={{ paddingTop: "4rem", paddingBottom: "4rem" }}>
+    <section id="projects" style={{ paddingTop: "4rem", paddingBottom: "4rem" }}>
       <h2 className="numbered-heading" data-number="03.">
         {t("projects.title")}
       </h2>

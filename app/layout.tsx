@@ -3,9 +3,33 @@ import "./globals.css";
 import { Providers } from "./components/Providers";
 
 export const metadata: Metadata = {
-  title: "Portfolio | Computer Engineer & Designer",
+  title: "Yaneth Doria | Computer Engineer",
   description:
     "Design-minded computer engineer focused on building beautiful, human-centered digital experiences.",
+  keywords: ["Yaneth Doria", "Portfolio", "Computer Engineer", "Software Developer", "Designer", "React", "Next.js"],
+  openGraph: {
+    title: "Yaneth Doria | Computer Engineer",
+    description: "Design-minded computer engineer focused on building beautiful, human-centered digital experiences.",
+    url: "https://yanethdoria.vercel.app",
+    siteName: "Yaneth Doria Portfolio",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Yaneth Doria - Portfolio Preview",
+      },
+    ],
+    locale: "es_ES",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Yaneth Doria | Computer Engineer",
+    description: "Software Developer & Designer Portfolio",
+    images: ["/og-image.png"],
+    creator: "@betzadev",
+  },
 };
 
 export default function RootLayout({
