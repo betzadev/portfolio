@@ -5,18 +5,18 @@ import { motion } from "motion/react";
 import { useLanguage } from "../context/LanguageContext";
 import { translations } from "../i18n/translations";
 
+import { AnimatedTitle } from "./AnimatedTitle";
+
 export const AboutSection = () => {
   const { t, language } = useLanguage();
-  const skillList = translations[language].about.skills;
+  const skillList: string[] = (translations as any)[language]?.about?.skills || [];
 
   return (
     <section
       id="about"
       style={{ paddingTop: "6rem", paddingBottom: "4rem" }}
     >
-      <h2 className="numbered-heading" data-number="01.">
-        {t("about.title")}
-      </h2>
+      <AnimatedTitle numberStr="01." title={t("about.title")} />
 
       <motion.div
         initial={{ opacity: 0, y: 24 }}

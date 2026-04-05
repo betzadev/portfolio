@@ -49,10 +49,12 @@
 
 html {
   scroll-behavior: smooth;
+  height: 100%;
+  background-color: #04101C; /* Fallback matching dark theme until canvas loads */
 }
 
 body {
-  background-color: var(--background);
+  background-color: transparent; /* Let the canvas background show */
   color: var(--text);
   font-family: var(--font-sans);
   font-size: 1rem;
@@ -62,6 +64,8 @@ body {
     color 0.3s ease;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  position: relative;
 }
 
 /* =====================
@@ -77,7 +81,10 @@ body {
   flex-direction: column;
   justify-content: space-between;
   padding: 4rem 3.5rem;
-  background-color: var(--background);
+  /* Nearly transparent — let the canvas animation shine through fully */
+  background-color: color-mix(in srgb, var(--background) 5%, transparent);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   z-index: 40;
   overflow-y: auto;
 }
@@ -85,6 +92,8 @@ body {
 .portfolio-main {
   margin-left: var(--sidebar-w);
   min-height: 100vh;
+  position: relative;
+  z-index: 10;
 }
 
 .portfolio-content {

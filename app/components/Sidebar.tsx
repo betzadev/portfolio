@@ -101,11 +101,21 @@ export const Sidebar = () => {
           
           {/* Header Info */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.5 }}
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: { staggerChildren: 0.08, delayChildren: 0.1 }
+              }
+            }}
           >
-            <h1
+            <motion.h1
+              variants={{
+                hidden: { opacity: 0, y: -20 },
+                visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 120 } }
+              }}
               style={{
                 color: headingColor,
                 fontSize: "2rem",
@@ -118,42 +128,47 @@ export const Sidebar = () => {
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             >
               {t("hero.name")}
-            </h1>
-            <h2
+            </motion.h1>
+            
+            <motion.h2
+              variants={{
+                hidden: { opacity: 0, y: -10 },
+                visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } }
+              }}
               style={{
                 color: textColor,
                 fontSize: "1rem",
                 fontWeight: 500,
-                marginBottom: "0.75rem",
+                marginBottom: "1.2rem",
               }}
             >
               {t("hero.tagline")}
-            </h2>
+            </motion.h2>
 
 
             {/* Social Icons Row */}
-            <div style={{ marginBottom: "2rem", display: 'flex', gap: '1.25rem', alignItems: 'center' }}>
+            <motion.div 
+              style={{ marginBottom: "2rem", display: 'flex', gap: '1.25rem', alignItems: 'center' }}
+            >
                {socialIcons.map((item) => (
-                   <a 
+                   <motion.a 
+                    variants={{
+                      hidden: { opacity: 0, scale: 0.5, y: 10 },
+                      visible: { opacity: 1, scale: 1, y: 0, transition: { type: "spring", stiffness: 200 } }
+                    }}
+                    whileHover={{ y: -4, scale: 1.15, color: accentColor }}
+                    whileTap={{ scale: 0.95 }}
                     key={item.name} 
                     href={item.href} 
                     target="_blank" 
                     rel="noreferrer"
                     aria-label={item.name}
-                    style={{ color: mutedColor, transition: "color 0.2s, transform 0.2s" }}
-                    onMouseEnter={(e) => {
-                        (e.currentTarget as HTMLElement).style.color = accentColor;
-                        (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)";
-                    }}
-                    onMouseLeave={(e) => {
-                        (e.currentTarget as HTMLElement).style.color = mutedColor;
-                        (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-                    }}
+                    style={{ color: mutedColor, display: "inline-block" }}
                    >
                        {item.icon}
-                   </a>
+                   </motion.a>
                ))}
-            </div>
+            </motion.div>
 
           </motion.div>
 
@@ -239,7 +254,10 @@ export const Sidebar = () => {
           zIndex: 50,
           alignItems: "center",
           justifyContent: "space-between",
-          padding: "1rem 1.5rem",
+          paddingTop: "max(1rem, env(safe-area-inset-top))",
+          paddingBottom: "1rem",
+          paddingLeft: "max(1.5rem, env(safe-area-inset-left))",
+          paddingRight: "max(1.5rem, env(safe-area-inset-right))",
           background: "var(--background)",
           borderBottom: "1px solid var(--surface-2)",
         }}
@@ -282,10 +300,12 @@ export const Sidebar = () => {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            background: "var(--light-navy, #112240)",
+            background: "var(--background)",
+            paddingTop: "env(safe-area-inset-top)",
+            paddingBottom: "env(safe-area-inset-bottom)",
           }}
         >
-          <ul style={{ listStyle: "none", textAlign: "center", display: "flex", flexDirection: "column", gap: "2rem" }}>
+          <ul style={{ listStyle: "none", textAlign: "center", display: "flex", flexDirection: "column", gap: "2rem", width: "100%", padding: "0 2rem" }}>
             {navItems.map((item, i) => (
               <motion.li
                 key={item.key}

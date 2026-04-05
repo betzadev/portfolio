@@ -4,16 +4,15 @@ import React from "react";
 import { motion } from "motion/react";
 import { useLanguage } from "../context/LanguageContext";
 import { translations } from "../i18n/translations";
+import { AnimatedTitle } from "./AnimatedTitle";
 
 export const CertificationsSection = () => {
   const { t, language } = useLanguage();
-  const certifications = translations[language].certifications.items;
+  const certifications: any[] = (translations as any)[language]?.certifications?.items || [];
 
   return (
     <section id="certifications" style={{ paddingTop: "4rem", paddingBottom: "6rem" }}>
-      <h2 className="numbered-heading" data-number="05.">
-        {t("certifications.title")}
-      </h2>
+      <AnimatedTitle numberStr="05." title={t("certifications.title")} />
 
       <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
         {certifications && certifications.map((cert: any, index: number) => (

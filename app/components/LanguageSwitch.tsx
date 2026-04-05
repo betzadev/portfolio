@@ -11,7 +11,13 @@ export const LanguageSwitch = () => {
 
   return (
     <button
-      onClick={() => setLanguage(isEN ? "es" : "en")}
+      onClick={(e) => {
+        const newLang = isEN ? "es" : "en";
+        const evt = new CustomEvent("playLanguageJump", {
+           detail: { onComplete: () => setLanguage(newLang) }
+        });
+        window.dispatchEvent(evt);
+      }}
       aria-label="Switch Language"
       style={{
         position: "relative",

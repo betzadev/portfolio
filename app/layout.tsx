@@ -3,6 +3,7 @@ import "./globals.css";
 import { Providers } from "./components/Providers";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://yanethdoria.vercel.app"),
   title: "Yaneth Doria | Computer Engineer",
   description:
     "Design-minded computer engineer focused on building beautiful, human-centered digital experiences.",
@@ -38,7 +39,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -63,7 +64,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <Providers>{children}</Providers>
       </body>
     </html>

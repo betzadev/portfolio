@@ -5,16 +5,16 @@ import { motion, AnimatePresence } from "motion/react";
 import { useLanguage } from "../context/LanguageContext";
 import { translations } from "../i18n/translations";
 
+import { AnimatedTitle } from "./AnimatedTitle";
+
 export const ExperienceSection = () => {
   const { t, language } = useLanguage();
   const [activeTab, setActiveTab] = useState(0);
-  const jobs = translations[language].experience.jobs;
+  const jobs: any[] = (translations as any)[language]?.experience?.jobs || [];
 
   return (
-    <section id="experience" style={{ paddingTop: "4rem", paddingBottom: "4rem" }}>
-      <h2 className="numbered-heading" data-number="02.">
-        {t("experience.title")}
-      </h2>
+    <section id="experience" style={{ paddingTop: "6rem", paddingBottom: "4rem" }}>
+      <AnimatedTitle numberStr="02." title={t("experience.title")} />
 
       <div
         style={{
@@ -34,7 +34,7 @@ export const ExperienceSection = () => {
             flexShrink: 0,
           }}
         >
-          {jobs.map((job, index) => {
+          {jobs.map((job: any, index: number) => {
             const isActive = activeTab === index;
             return (
               <button
@@ -101,7 +101,7 @@ export const ExperienceSection = () => {
                 {jobs[activeTab].range}
               </p>
               <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-                {jobs[activeTab].bullets.map((bullet, i) => (
+                {jobs[activeTab]?.bullets?.map((bullet: any, i: number) => (
                   <li
                     key={i}
                     style={{

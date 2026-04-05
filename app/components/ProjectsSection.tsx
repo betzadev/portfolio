@@ -5,6 +5,9 @@ import { motion } from "motion/react";
 import { useLanguage } from "../context/LanguageContext";
 import { translations } from "../i18n/translations";
 import { CuchiStoreShowcase } from "./CuchiStoreShowcase";
+import { AnimatedTitle } from "./AnimatedTitle";
+import { InteractiveImage3D } from "./InteractiveImage3D";
+import { Card3DBackground } from "./Card3DBackground";
 
 const ExternalIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -32,27 +35,113 @@ const IconLink = ({ href, children }: { href: string; children: React.ReactNode 
     target="_blank"
     rel="noreferrer"
     style={{ color: "var(--text-muted)", transition: "color 0.2s" }}
-    onMouseEnter={(e) => (e.currentTarget.style.color = "var(--accent)")}
-    onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
+    onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.color = "var(--accent)")}
+    onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.color = "var(--text-muted)")}
   >
     {children}
   </a>
 );
 
+const OtherProjectCard = ({ project, index }: { project: any; index: number }) => {
+  const [isHovered, setIsHovered] = React.useState(false);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.4, delay: index * 0.08 }}
+      style={{
+        background: "var(--surface)",
+        border: "1px solid var(--surface-2)",
+        borderRadius: "0.65rem",
+        padding: "1.5rem",
+        display: "flex",
+        flexDirection: "column",
+        transition: "transform 0.2s, box-shadow 0.2s",
+        cursor: "pointer",
+        position: "relative",
+        overflow: "hidden", // clip the 3D background corner
+      }}
+      onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+        (e.currentTarget as HTMLElement).style.transform = "translateY(-5px)";
+        (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 24px rgba(0,0,0,0.15)";
+        setIsHovered(true);
+      }}
+      onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => {
+        (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+        (e.currentTarget as HTMLElement).style.boxShadow = "none";
+        setIsHovered(false);
+      }}
+    >
+      {/* Three.js interactive background */}
+      <Card3DBackground isHovered={isHovered} />
+
+      {/* Content wrapper with zIndex to sit above the 3D canvas */}
+      <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", height: "100%" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1rem" }}>
+          <span style={{ color: "var(--accent)" }}><FolderIcon /></span>
+          <div style={{ display: "flex", gap: "0.6rem" }}>
+            <IconLink href={project.github}><GithubIcon /></IconLink>
+            <IconLink href={project.external}><ExternalIcon /></IconLink>
+          </div>
+        </div>
+
+        <h4
+          style={{
+            color: "var(--heading)",
+            fontSize: "0.95rem",
+            fontWeight: 600,
+            marginBottom: "0.5rem",
+            transition: "color 0.2s",
+          }}
+        >
+          {project.title}
+        </h4>
+
+        <p
+          style={{
+            color: "var(--text-muted)",
+            fontSize: "0.8rem",
+            lineHeight: 1.6,
+            flex: 1,
+            marginBottom: "1rem",
+          }}
+        >
+          {project.description}
+        </p>
+
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+          {project.tech.map((tech: string) => (
+            <span
+              key={tech}
+              style={{
+                color: "var(--text-muted)",
+                fontFamily: "var(--font-mono)",
+                fontSize: "0.65rem",
+              }}
+            >
+              {tech}
+            </span>
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
 export const ProjectsSection = () => {
   const { t, language } = useLanguage();
-  const featured = translations[language].projects.featured;
-  const others = translations[language].projects.others;
+  const featured: any[] = (translations as any)[language]?.projects?.featured || [];
+  const others: any[] = (translations as any)[language]?.projects?.others || [];
 
   return (
     <section id="projects" style={{ paddingTop: "4rem", paddingBottom: "4rem" }}>
-      <h2 className="numbered-heading" data-number="03.">
-        {t("projects.title")}
-      </h2>
+      <AnimatedTitle numberStr="03." title={t("projects.title")} />
 
       {/* ── Featured Projects ── */}
       <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem", marginBottom: "4rem" }}>
-        {featured.map((project, index) => (
+        {featured.map((project: any, index: number) => (
           <motion.div
             key={project.title}
             initial={{ opacity: 0, y: 30 }}
@@ -137,22 +226,16 @@ export const ProjectsSection = () => {
                     }}
                   >
                     {project.images.map((img: string, i: number) => (
-                      <motion.img
+                      <motion.div
                         key={img}
-                        src={img}
-                        alt={`${project.title} mockup ${i + 1}`}
-                        initial={{ opacity: 0, scale: 0.9, y: 40, rotate: -4 }}
+                        initial={{ opacity: 0, scale: 0.9, y: 40, rotate: -2 }}
                         whileInView={{ opacity: 1, scale: 1, y: 0, rotate: 0 }}
                         transition={{ duration: 0.8, delay: i * 0.2, ease: "easeOut" }}
                         viewport={{ once: true, margin: "-50px" }}
-                        style={{
-                          width: "100%",
-                          height: "auto",
-                          borderRadius: "0.5rem",
-                          boxShadow: "0 8px 30px rgba(0,0,0,0.15)",
-                          objectFit: "contain",
-                        }}
-                      />
+                        style={{ width: "100%" }}
+                      >
+                        <InteractiveImage3D src={img} alt={`${project.title} mockup ${i + 1}`} />
+                      </motion.div>
                     ))}
                   </div>
                 )
@@ -171,79 +254,8 @@ export const ProjectsSection = () => {
           gap: "1rem",
         }}
       >
-        {others.map((project, index) => (
-          <motion.div
-            key={project.title}
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: index * 0.08 }}
-            style={{
-              background: "var(--surface)",
-              border: "1px solid var(--surface-2)",
-              borderRadius: "0.65rem",
-              padding: "1.5rem",
-              display: "flex",
-              flexDirection: "column",
-              transition: "transform 0.2s, box-shadow 0.2s",
-              cursor: "pointer",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.transform = "translateY(-5px)";
-              (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 24px rgba(0,0,0,0.15)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-              (e.currentTarget as HTMLElement).style.boxShadow = "none";
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1rem" }}>
-              <span style={{ color: "var(--accent)" }}><FolderIcon /></span>
-              <div style={{ display: "flex", gap: "0.6rem" }}>
-                <IconLink href={project.github}><GithubIcon /></IconLink>
-                <IconLink href={project.external}><ExternalIcon /></IconLink>
-              </div>
-            </div>
-
-            <h4
-              style={{
-                color: "var(--heading)",
-                fontSize: "0.95rem",
-                fontWeight: 600,
-                marginBottom: "0.5rem",
-                transition: "color 0.2s",
-              }}
-            >
-              {project.title}
-            </h4>
-
-            <p
-              style={{
-                color: "var(--text-muted)",
-                fontSize: "0.8rem",
-                lineHeight: 1.6,
-                flex: 1,
-                marginBottom: "1rem",
-              }}
-            >
-              {project.description}
-            </p>
-
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-              {project.tech.map((tech: string) => (
-                <span
-                  key={tech}
-                  style={{
-                    color: "var(--text-muted)",
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "0.65rem",
-                  }}
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </motion.div>
+        {others.map((project: any, index: number) => (
+          <OtherProjectCard key={project.title} project={project} index={index} />
         ))}
       </div>
     </section>
